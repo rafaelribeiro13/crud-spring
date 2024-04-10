@@ -22,7 +22,7 @@ public class CrudSpringApplication {
 			var course01 = new Course();
 			course01.setId(1L);
 			course01.setName("Angular");
-			course01.setCategory("Front-End");
+			course01.setCategory("front-end");
 
 			repository.save(course01);
 		};
