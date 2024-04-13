@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import rafaelribeiro13.com.github.crudspring.CourseRepository;
 import rafaelribeiro13.com.github.crudspring.model.Course;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/api/courses")
@@ -40,6 +42,20 @@ public class CourseController {
     @PostMapping
     public ResponseEntity<Course> save(@RequestBody Course course) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.repository.save(course));
+    }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody Course course) {
+        return repository
+            .findById(id)
+            .map(courseFound -> {
+                courseFound.setName(course.getName());
+                courseFound.setCategory(course.getCategory());
+
+                Course updated = repository.save(courseFound);
+                return ResponseEntity.ok().body(updated);
+            })
+            .orElse(ResponseEntity.notFound().build());
     }
 
 }
