@@ -1,5 +1,8 @@
 package rafaelribeiro13.com.github.crudspring.model;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -15,6 +18,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+@SQLDelete(sql = "UPDATE courses SET status='Inativo' WHERE id=?")
+@SQLRestriction("status <> 'Inativo'")
 @Entity
 @Table(name = "courses")
 public class Course {
@@ -34,5 +39,11 @@ public class Course {
     @Pattern(regexp = "back-end|front-end")
     @Column(length = 12, nullable = false)
     private String category;
+
+    @NotNull
+    @Size(max = 12)
+    @Pattern(regexp = "Ativo|Inativo")
+    @Column(length = 12, nullable = false)
+    private String status = "Ativo";
     
 }

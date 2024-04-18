@@ -68,7 +68,7 @@ public class CourseController {
         return repository
             .findById(id)
             .map(course -> {
-                repository.delete(course);
+                repository.deleteById(course.getId());
                 return ResponseEntity.noContent().<Void>build();
             })
             .orElse(ResponseEntity.notFound().build());
