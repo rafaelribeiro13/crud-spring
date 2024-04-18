@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import rafaelribeiro13.com.github.crudspring.CourseRepository;
 import rafaelribeiro13.com.github.crudspring.model.Course;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
+@Validated
 @RestController
 @RequestMapping("/api/courses")
 public class CourseController {
@@ -33,7 +37,7 @@ public class CourseController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Course> findById(@PathVariable Long id) {
+    public ResponseEntity<Course> findById(@PathVariable @NotNull @Positive Long id) {
        return repository
             .findById(id)
             .map(course -> ResponseEntity.ok().body(course))
@@ -41,12 +45,12 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<Course> save(@RequestBody Course course) {
+    public ResponseEntity<Course> save(@RequestBody @Valid Course course) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.repository.save(course));
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody Course course) {
+    public ResponseEntity<Course> update(@PathVariable @NotNull @Positive Long id, @RequestBody @Valid Course course) {
         return repository
             .findById(id)
             .map(courseFound -> {
@@ -60,7 +64,7 @@ public class CourseController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable @NotNull @Positive Long id) {
         return repository
             .findById(id)
             .map(course -> {
