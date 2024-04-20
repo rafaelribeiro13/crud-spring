@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import rafaelribeiro13.com.github.crudspring.model.Course;
+import rafaelribeiro13.com.github.crudspring.dto.CourseDTO;
 import rafaelribeiro13.com.github.crudspring.service.CourseService;
 
 @Validated
@@ -32,23 +32,23 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Course>> findAll() {
+    public ResponseEntity<List<CourseDTO>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Course> findById(@PathVariable @NotNull @Positive Long id) {
+    public ResponseEntity<CourseDTO> findById(@PathVariable @NotNull @Positive Long id) {
        return ResponseEntity.ok().body(service.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Course> save(@RequestBody @Valid Course course) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(course));
+    public ResponseEntity<CourseDTO> save(@RequestBody @Valid  @NotNull CourseDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Course> update(@PathVariable @NotNull @Positive Long id, @RequestBody @Valid Course course) {
-        return ResponseEntity.ok().body(service.update(id, course));
+    public ResponseEntity<CourseDTO> update(@PathVariable @NotNull @Positive Long id, @RequestBody @Valid   @NotNull CourseDTO dto) {
+        return ResponseEntity.ok().body(service.update(id, dto));
     }
 
     @DeleteMapping(path = "/{id}")

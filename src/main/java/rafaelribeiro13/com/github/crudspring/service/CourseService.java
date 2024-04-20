@@ -9,40 +9,48 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import rafaelribeiro13.com.github.crudspring.CourseRepository;
+import rafaelribeiro13.com.github.crudspring.dto.CourseDTO;
+import rafaelribeiro13.com.github.crudspring.dto.mapper.CourseMapper;
 import rafaelribeiro13.com.github.crudspring.exception.ResourceNotFoundException;
-import rafaelribeiro13.com.github.crudspring.model.Course;
 
 @Service
 public class CourseService {
  
     private final CourseRepository repository;
+    private final CourseMapper courseMapper;
 
-    public CourseService(CourseRepository repository) {
+    public CourseService(CourseRepository repository, CourseMapper courseMapper) {
         this.repository = repository;
+        this.courseMapper = courseMapper;
     }
 
-    public List<Course> findAll() {
-        return repository.findAll();
+    public List<CourseDTO> findAll() {
+        return repository
+            .findAll()
+            .stream()
+            .map(courseMapper::toDTO)
+            .toList();
     }
 
-    public Course findById(@PathVariable @NotNull @Positive Long id) {
+    public CourseDTO findById(@PathVariable @NotNull @Positive Long id) {
         return repository
             .findById(id)
+            .map(courseMapper::toDTO)
             .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    public Course save(@Valid Course course) {
-        return repository.save(course);
+    public CourseDTO save(@Valid @NotNull CourseDTO dto) {
+        return courseMapper.toDTO(repository.save(courseMapper.toEntity(dto)));
     }
 
-    public Course update(@NotNull @Positive Long id, @Valid Course course) {
+    public CourseDTO update(@NotNull @Positive Long id, @Valid @NotNull CourseDTO dto) {
         return repository
             .findById(id)
             .map(courseFound -> {
-                courseFound.setName(course.getName());
-                courseFound.setCategory(course.getCategory());
+                courseFound.setName(dto.name());
+                courseFound.setCategory(dto.category());
 
-                return repository.save(courseFound);
+                return courseMapper.toDTO(repository.save(courseFound));
             })
             .orElseThrow(() -> new ResourceNotFoundException(id));
     }
