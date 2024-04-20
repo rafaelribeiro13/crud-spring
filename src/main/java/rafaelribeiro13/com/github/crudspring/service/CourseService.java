@@ -3,7 +3,6 @@ package rafaelribeiro13.com.github.crudspring.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -32,7 +31,7 @@ public class CourseService {
             .toList();
     }
 
-    public CourseDTO findById(@PathVariable @NotNull @Positive Long id) {
+    public CourseDTO findById(@NotNull @Positive Long id) {
         return repository
             .findById(id)
             .map(courseMapper::toDTO)
@@ -48,7 +47,7 @@ public class CourseService {
             .findById(id)
             .map(courseFound -> {
                 courseFound.setName(dto.name());
-                courseFound.setCategory(dto.category());
+                courseFound.setCategory(courseMapper.convertCategoryValue(dto.category()));
 
                 return courseMapper.toDTO(repository.save(courseFound));
             })
@@ -63,6 +62,4 @@ public class CourseService {
         repository.deleteById(id);
     }
  
-
-    
 }

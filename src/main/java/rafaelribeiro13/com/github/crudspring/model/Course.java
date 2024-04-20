@@ -6,6 +6,7 @@ import org.hibernate.annotations.SQLRestriction;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,13 +14,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import rafaelribeiro13.com.github.crudspring.enums.Category;
+import rafaelribeiro13.com.github.crudspring.enums.Status;
+import rafaelribeiro13.com.github.crudspring.enums.converters.CategoryConverter;
+import rafaelribeiro13.com.github.crudspring.enums.converters.StatusConverter;
 
 @Data
-@SQLDelete(sql = "UPDATE courses SET status='Inativo' WHERE id=?")
-@SQLRestriction("status <> 'Inativo'")
+@SQLDelete(sql = "UPDATE courses SET status='Inactive' WHERE id=?")
+@SQLRestriction("status <> 'Inactive'")
 @Entity
 @Table(name = "courses")
 public class Course {
@@ -35,15 +39,13 @@ public class Course {
     private String name;
     
     @NotNull
-    @Size(max = 12)
-    @Pattern(regexp = "back-end|front-end")
     @Column(length = 12, nullable = false)
-    private String category;
+    @Convert(converter = CategoryConverter.class)
+    private Category category;
 
     @NotNull
-    @Size(max = 12)
-    @Pattern(regexp = "Ativo|Inativo")
     @Column(length = 12, nullable = false)
-    private String status = "Ativo";
+    @Convert(converter = StatusConverter.class)
+    private Status status = Status.ACTIVE;
     
 }
