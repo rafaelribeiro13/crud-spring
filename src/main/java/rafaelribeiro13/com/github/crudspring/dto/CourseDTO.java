@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import rafaelribeiro13.com.github.crudspring.model.Lesson;
 
 public record CourseDTO(
     @JsonProperty("_id")
@@ -23,7 +22,7 @@ public record CourseDTO(
     @Pattern(regexp = "back-end|front-end")
     String category,
 
-    List<Lesson> lessons
+    List<LessonDTO> lessons
 ) {
     
 }
