@@ -11,6 +11,7 @@ import rafaelribeiro13.com.github.crudspring.CourseRepository;
 import rafaelribeiro13.com.github.crudspring.dto.CourseDTO;
 import rafaelribeiro13.com.github.crudspring.dto.mapper.CourseMapper;
 import rafaelribeiro13.com.github.crudspring.exception.ResourceNotFoundException;
+import rafaelribeiro13.com.github.crudspring.model.Course;
 
 @Service
 public class CourseService {
@@ -46,8 +47,13 @@ public class CourseService {
         return repository
             .findById(id)
             .map(courseFound -> {
+                Course course = courseMapper.toEntity(dto);
+
                 courseFound.setName(dto.name());
                 courseFound.setCategory(courseMapper.convertCategoryValue(dto.category()));
+                courseFound.getLessons().clear();
+
+                course.getLessons().forEach(courseFound.getLessons()::add);
 
                 return courseMapper.toDTO(repository.save(courseFound));
             })

@@ -8,6 +8,7 @@ import rafaelribeiro13.com.github.crudspring.dto.CourseDTO;
 import rafaelribeiro13.com.github.crudspring.dto.LessonDTO;
 import rafaelribeiro13.com.github.crudspring.enums.Category;
 import rafaelribeiro13.com.github.crudspring.model.Course;
+import rafaelribeiro13.com.github.crudspring.model.Lesson;
 
 @Component
 public class CourseMapper {
@@ -39,9 +40,23 @@ public class CourseMapper {
         if (dto.id() != null) {
             entity.setId(dto.id());
         }
+        
+        List<Lesson> lessons = dto.lessons()
+            .stream()
+            .map(lessonDto -> {
+                var lesson = new Lesson();
+                lesson.setId(lessonDto.id());
+                lesson.setName(lessonDto.name());
+                lesson.setYoutubeUrl(lessonDto.youtubeUrl());
+                lesson.setCourse(entity);
+
+                return lesson;
+            })
+            .toList();
+
         entity.setName(dto.name());
         entity.setCategory(convertCategoryValue(dto.category()));
-
+        entity.setLessons(lessons);
 
         return entity;
     }
