@@ -51,9 +51,9 @@ public class CourseService {
 
                 courseFound.setName(dto.name());
                 courseFound.setCategory(courseMapper.convertCategoryValue(dto.category()));
-                courseFound.getLessons().clear();
+                courseFound.clearLessons();
 
-                course.getLessons().forEach(courseFound.getLessons()::add);
+                course.getLessons().forEach(courseFound::addLesson);
 
                 return courseMapper.toDTO(repository.save(courseFound));
             })

@@ -56,7 +56,7 @@ public class CourseMapper {
 
         entity.setName(dto.name());
         entity.setCategory(convertCategoryValue(dto.category()));
-        entity.setLessons(lessons);
+        entity.addAllLessons(lessons);
 
         return entity;
     }

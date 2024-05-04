@@ -38,7 +38,7 @@ public class CrudSpringApplication {
 			lesson02.setYoutubeUrl("https://www.youtube.com/watch?v=TsaLQAetPLU");
 			lesson02.setCourse(course);
 			
-			course.getLessons().addAll(List.of(lesson01, lesson02));
+			course.addAllLessons(List.of(lesson01, lesson02));
 			repository.save(course);
 		};
 	}

@@ -1,0 +1,42 @@
+GET http://localhost:8080/api/courses
+
+###
+GET http://localhost:8080/api/courses/-1
+
+###
+POST http://localhost:8080/api/courses
+content-type: application/json
+
+{
+    "name": "Java 8+",
+    "category": "back-end",
+    "lessons": [
+      {
+        "name": "Herança",
+        "youtubeUrl": "https://youtu.be/Nb4uxLxdvxo?list=PLGxZ4Rq3BOBpwaVgAPxTxhdX_TfSVlTcY"
+      },
+      {
+        "name": "Polimorfismo",
+        "youtubeUrl": "https://www.youtube.com/watch?v=TsaLQAetPLU"
+      }
+    ]
+}
+
+###
+PUT http://localhost:8080/api/courses/-1
+content-type: application/json
+
+{
+    "name": "Angular",
+    "category": "front-end",
+    "lessons": [
+      {
+        "name": "Introdução",
+        "youtubeUrl": "https://youtu.be/Nb4uxLxdvxo?list=PLGxZ4Rq3BOBpwaVgAPxTxhdX_TfSVlTcY"
+      },
+      {
+        "name": "Github",
+        "youtubeUrl": "https://www.youtube.com/watch?v=TsaLQAetPLU"
+      }
+    ]
+  }
