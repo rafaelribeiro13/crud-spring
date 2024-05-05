@@ -1,6 +1,7 @@
 package rafaelribeiro13.com.github.crudspring.controller;
 
 import java.time.Instant;
+import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import rafaelribeiro13.com.github.crudspring.enums.ErrorMessages;
 import rafaelribeiro13.com.github.crudspring.exception.ResourceNotFoundException;
 import rafaelribeiro13.com.github.crudspring.exception.StandardError;
 
@@ -21,13 +23,12 @@ public class ApplicationControllerAdivice {
     public ResponseEntity<StandardError> handleResourceNotFoundException(
         ResourceNotFoundException ex, HttpServletRequest request
     ) {
-        String error = "Recurso não encontrado";
         HttpStatus status = HttpStatus.NOT_FOUND;
         
         var standardError = new StandardError(
             Instant.now(), 
             status.value(), 
-            error,
+            ErrorMessages.NOT_FOUND.getValue(),
             ex.getMessage(), 
             request.getRequestURI()
         );
@@ -39,7 +40,6 @@ public class ApplicationControllerAdivice {
     public ResponseEntity<StandardError> handleMethodArgumentNotValidException(
         MethodArgumentNotValidException ex, HttpServletRequest request
     ) {
-        var error = "Falha na validação";
         HttpStatus status = HttpStatus.BAD_REQUEST;
         
         String message = ex.getFieldErrors().stream()
@@ -50,7 +50,7 @@ public class ApplicationControllerAdivice {
 
         standardError.setTimestamp(Instant.now());
         standardError.setStatus(status.value());
-        standardError.setError(error);
+        standardError.setError(ErrorMessages.VALIDATION.getValue());
         standardError.setMessage(message);
         standardError.setPath(request.getRequestURI());
 
@@ -61,7 +61,6 @@ public class ApplicationControllerAdivice {
     public ResponseEntity<StandardError> handleConstraintViolationException(
         ConstraintViolationException ex, HttpServletRequest request
     ) {
-        var error = "Falha na validação";
         HttpStatus status = HttpStatus.BAD_REQUEST;
         
         String message = ex.getConstraintViolations().stream()
@@ -72,21 +71,20 @@ public class ApplicationControllerAdivice {
 
         standardError.setTimestamp(Instant.now());
         standardError.setStatus(status.value());
-        standardError.setError(error);
+        standardError.setError(ErrorMessages.VALIDATION.getValue());
         standardError.setMessage(message);
         standardError.setPath(request.getRequestURI());
 
         return ResponseEntity.status(status).body(standardError);
     }
 
-    // MethodArgumentTypeMismatchException
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<StandardError> handleMethodArgumentTypeMismatchException(
         MethodArgumentTypeMismatchException ex, HttpServletRequest request
     ) {
         var message = "";
 
-        if (ex != null && ex.getRequiredType() != null) {
+        if (Objects.nonNull(ex) && Objects.nonNull(ex.getRequiredType())) {
             String type = ex.getRequiredType().getName();
             String[] typeParts = type.split("\\.");
             String typeName = typeParts[typeParts.length - 1];
@@ -96,14 +94,13 @@ public class ApplicationControllerAdivice {
             message = "Argument type not valid";
         }
 
-        var error = "Falha na validação";
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
         var standardError = new StandardError();
 
         standardError.setTimestamp(Instant.now());
         standardError.setStatus(status.value());
-        standardError.setError(error);
+        standardError.setError(ErrorMessages.VALIDATION.getValue());
         standardError.setMessage(message);
         standardError.setPath(request.getRequestURI());
 

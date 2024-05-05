@@ -8,8 +8,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import rafaelribeiro13.com.github.crudspring.enums.Category;
+import rafaelribeiro13.com.github.crudspring.enums.validation.ValueOfEnum;
 
 public record CourseDTO(
     @JsonProperty("_id")
@@ -21,7 +22,7 @@ public record CourseDTO(
 
     @NotNull
     @Size(max = 12)
-    @Pattern(regexp = "back-end|front-end")
+    @ValueOfEnum(enumClass = Category.class)
     String category,
 
     @NotNull
