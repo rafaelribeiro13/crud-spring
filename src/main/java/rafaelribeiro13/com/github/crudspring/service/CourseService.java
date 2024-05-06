@@ -2,13 +2,18 @@ package rafaelribeiro13.com.github.crudspring.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import rafaelribeiro13.com.github.crudspring.CourseRepository;
 import rafaelribeiro13.com.github.crudspring.dto.CourseDTO;
+import rafaelribeiro13.com.github.crudspring.dto.CoursePageDTO;
 import rafaelribeiro13.com.github.crudspring.dto.mapper.CourseMapper;
 import rafaelribeiro13.com.github.crudspring.exception.ResourceNotFoundException;
 import rafaelribeiro13.com.github.crudspring.model.Course;
@@ -24,14 +29,15 @@ public class CourseService {
         this.courseMapper = courseMapper;
     }
 
-    public List<CourseDTO> findAll() {
-        return repository
-            .findAll()
-            .stream()
-            .map(courseMapper::toDTO)
-            .toList();
+    public CoursePageDTO findAll(
+        @PositiveOrZero int page, 
+        @Positive @Max(100) int pageSize
+    ) {
+        Page<Course> pageCourse = repository.findAll(PageRequest.of(page, pageSize));
+        List<CourseDTO> courses = pageCourse.get().map(courseMapper::toDTO).toList();
+        return new CoursePageDTO(courses, pageCourse.getTotalElements(), pageCourse.getTotalPages());
     }
-
+    
     public CourseDTO findById(@NotNull @Positive Long id) {
         return repository
             .findById(id)

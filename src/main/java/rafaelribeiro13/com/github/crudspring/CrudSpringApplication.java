@@ -22,24 +22,25 @@ public class CrudSpringApplication {
 	CommandLineRunner initDatabase(CourseRepository repository) {
 		return args -> {
 			repository.deleteAll();
-			
-			var course = new Course();
-			course.setId(1L);
-			course.setName("Angular");
-			course.setCategory(Category.FRONT_END);
 
-			var lesson01 = new Lesson();
-			lesson01.setName("Introdução");
-			lesson01.setYoutubeUrl("https://youtu.be/Nb4uxLxdvxo?list=PLGxZ4Rq3BOBpwaVgAPxTxhdX_TfSVlTcY");
-			lesson01.setCourse(course);
-
-			var lesson02 = new Lesson();
-			lesson02.setName("Github");
-			lesson02.setYoutubeUrl("https://www.youtube.com/watch?v=TsaLQAetPLU");
-			lesson02.setCourse(course);
-			
-			course.addAllLessons(List.of(lesson01, lesson02));
-			repository.save(course);
+			for (int i = 0; i < 20; i++) {
+				var course = new Course();
+				course.setName("Angular " + i);
+				course.setCategory(Category.FRONT_END);
+	
+				var lesson01 = new Lesson();
+				lesson01.setName("Introdução");
+				lesson01.setYoutubeUrl("https://youtu.be/Nb4uxLxdvxo?list=PLGxZ4Rq3BOBpwaVgAPxTxhdX_TfSVlTcY");
+				lesson01.setCourse(course);
+	
+				var lesson02 = new Lesson();
+				lesson02.setName("Github");
+				lesson02.setYoutubeUrl("https://www.youtube.com/watch?v=TsaLQAetPLU");
+				lesson02.setCourse(course);
+				
+				course.addAllLessons(List.of(lesson01, lesson02));
+				repository.save(course);
+			}
 		};
 	}
 

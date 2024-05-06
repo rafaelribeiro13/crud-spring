@@ -1,7 +1,5 @@
 package rafaelribeiro13.com.github.crudspring.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -12,12 +10,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import rafaelribeiro13.com.github.crudspring.dto.CourseDTO;
+import rafaelribeiro13.com.github.crudspring.dto.CoursePageDTO;
 import rafaelribeiro13.com.github.crudspring.service.CourseService;
 
 @Validated
@@ -32,8 +34,11 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CourseDTO>> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+    public ResponseEntity<CoursePageDTO> findAll(
+        @RequestParam(defaultValue = "0") @PositiveOrZero int page, 
+        @RequestParam(defaultValue = "10") @Positive @Max(100) int pageSize
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findAll(page, pageSize));
     }
 
     @GetMapping(path = "/{id}")
