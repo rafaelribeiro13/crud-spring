@@ -52,7 +52,10 @@ public class CourseController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<CourseDTO> update(@PathVariable @NotNull @Positive Long id, @RequestBody @Valid   @NotNull CourseDTO dto) {
+    public ResponseEntity<CourseDTO> update(
+        @PathVariable @NotNull @Positive Long id, 
+        @RequestBody @Valid @NotNull CourseDTO dto
+    ) {
         return ResponseEntity.ok().body(service.update(id, dto));
     }
 
