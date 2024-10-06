@@ -46,7 +46,8 @@ public class CourseService {
     }
 
     public CourseDTO save(@Valid @NotNull CourseDTO dto) {
-        return courseMapper.toDTO(repository.save(courseMapper.toEntity(dto)));
+        Course entity = courseMapper.toEntity(dto);
+        return courseMapper.toDTO(repository.save(entity));
     }
 
     public CourseDTO update(@NotNull @Positive Long id, @Valid @NotNull CourseDTO dto) {
